@@ -20,7 +20,7 @@ public class ListQueryParser implements QueryParser {
             if (value.isEmpty()) {
                 whereSql.append(" and false ");
             } else {
-                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" in :").append(fieldName).append(" ");
+                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" in (:").append(fieldName).append(") ");
                 params.put(fieldName, value);
             }
         }
