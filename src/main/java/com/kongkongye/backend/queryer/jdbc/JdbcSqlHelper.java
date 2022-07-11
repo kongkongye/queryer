@@ -1,10 +1,10 @@
 package com.kongkongye.backend.queryer.jdbc;
 
 import com.google.common.base.Preconditions;
-import com.kongkongye.backend.common.Maps;
-import com.kongkongye.backend.common.Pagination;
-import com.kongkongye.backend.common.Paging;
 import com.kongkongye.backend.queryer.SqlHelper;
+import com.kongkongye.backend.queryer.common.Maps;
+import com.kongkongye.backend.queryer.common.Pagination;
+import com.kongkongye.backend.queryer.common.Paging;
 import com.kongkongye.backend.queryer.query.Query;
 import lombok.Getter;
 import lombok.Setter;

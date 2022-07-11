@@ -1,9 +1,9 @@
 package com.kongkongye.backend.queryer.query.parser.parsers;
 
 import com.google.common.base.Strings;
-import com.kongkongye.backend.common.util.ReflectionUtil;
-import com.kongkongye.backend.common.util.Util;
 import com.kongkongye.backend.queryer.SqlHelper;
+import com.kongkongye.backend.queryer.common.ReflectionUtil;
+import com.kongkongye.backend.queryer.common.Util;
 import com.kongkongye.backend.queryer.query.annotation.QueryEnd;
 import com.kongkongye.backend.queryer.query.annotation.QueryOp;
 import com.kongkongye.backend.queryer.query.parser.QueryParser;
