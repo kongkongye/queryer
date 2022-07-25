@@ -21,7 +21,7 @@
 
 ### xxxQuery
 
-``` java
+```java
 
 @Data
 @AutoQuery
@@ -33,7 +33,7 @@ public class UserQuery extends BaseQuery {
 
 ### xxxDTO
 
-``` java
+```java
 
 @AutoSel
 @AutoFrom
@@ -48,15 +48,15 @@ public class UserDTO {
 
 ### xxxDao
 
-``` java
+```java
 
 @Component
 public class UserDao {
     @Autowired
     protected NamedParameterJdbcTemplate template;
 
-    public SqlHelper<UserDTO> help(UserQuery query) {
-        return JdbcUtil.help(template, (selSql, fromSql, whereSql, groupSql, params) -> {
+    public SqlHelperBuilder<UserDTO> help(UserQuery query) {
+        return new JdbcSqlHelperBuilder<>(template, (selSql, fromSql, whereSql, groupSql, params) -> {
             //额外的sql写这里
         }, query, UserDTO.class);
     }
@@ -65,18 +65,20 @@ public class UserDao {
 
 ### 使用
 
-``` java
+```java
 
-public void someQuery(){
-     SqlHelper<UserDTO> helper=userDao.help(new UserQuery());
-     //获得数量
-     int count=helper.getCount();
-     //获得全部列表
-     List<UserDTO> users=helper.getListParsed();
-     //获取分页列表
-     Pagination<UserDTO> pagination=helper.getPageParsed(new Paging(1,10));
-     //获取一个
-     UserDTO user=helper.getOneParsed();
+public class SomeService {
+    public void someQuery() {
+        SqlHelper<UserDTO> helper = userDao.help(new UserQuery()).build();
+        //获得数量
+        int count = helper.getCount();
+        //获得全部列表
+        List<UserDTO> users = helper.getListParsed();
+        //获取分页列表
+        Pagination<UserDTO> pagination = helper.getPageParsed(new Paging(1, 10));
+        //获取一个
+        UserDTO user = helper.getOneParsed();
+    }
 }
 
 ```
