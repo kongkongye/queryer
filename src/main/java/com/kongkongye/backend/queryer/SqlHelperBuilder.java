@@ -1,13 +1,12 @@
 package com.kongkongye.backend.queryer;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Strings;
 import com.kongkongye.backend.queryer.query.Query;
 import lombok.Getter;
 import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class SqlHelperBuilder<R> {
     protected List<SqlHelper.HelpBuilder> helpBuilders = new ArrayList<>();
@@ -74,7 +73,9 @@ public abstract class SqlHelperBuilder<R> {
      */
     public SqlHelper<R> build() {
         //自动添加sel参数
-        QueryUtil.parseSel(selSql, cls);
+        Set<String> white = !Strings.isNullOrEmpty(query.getQWhite()) ? new HashSet<>(JSON.parseArray(query.getQWhite(), String.class)) : null;
+        Set<String> black = !Strings.isNullOrEmpty(query.getQBlack()) ? new HashSet<>(JSON.parseArray(query.getQBlack(), String.class)) : null;
+        QueryUtil.parseSel(selSql, cls, white, black);
         //自动添加from语句
         QueryUtil.parseFrom(fromSql, cls);
         //build

@@ -117,9 +117,29 @@ public abstract class SqlHelper<R> extends Base {
         return result.getDataList().isEmpty() ? null : result.getDataList().get(0);
     }
 
-    public abstract List<Maps> getList();
+    public List<Maps> getList() {
+        //获取
+        List<Maps> mapsList = doGetList();
+        //convert
+        List<Maps> convertedList = convert(mapsList);
+        //返回
+        return convertedList;
+    }
 
-    public abstract Pagination<Maps> getPage(Paging paging);
+    public Pagination<Maps> getPage(Paging paging) {
+        //获取
+        List<Maps> dataList = doGetPage(paging);
+        //convert
+        List<Maps> convertedList = convert(dataList);
+        //返回
+        Pagination<Maps> pagination = new Pagination<>(paging.getPageSize(), paging.getPage(), getCount());
+        pagination.setDataList(convertedList);
+        return pagination;
+    }
+
+    protected abstract List<Maps> doGetList();
+
+    protected abstract List<Maps> doGetPage(Paging paging);
 
     /**
      * 有传入cls时此方法才有效
@@ -234,7 +254,7 @@ public abstract class SqlHelper<R> extends Base {
     }
 
     public String getListSql() {
-        String orderSql = query != null ? getOrderBySql(query.getOrderBy()) : "";
+        String orderSql = query != null ? getOrderBySql(query.getQOrder()) : "";
         return String.join(" ", Lists.newArrayList(selSql, getSql(false), orderSql));
     }
 

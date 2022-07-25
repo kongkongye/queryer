@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 @AutoQuery
 public class BaseQuery implements Query {
-    protected String orderBy;
-    protected QueryTypeEn queryType;
+    protected String qOrder;
+    protected QueryTypeEn qType;
+    protected String qWhite;
+    protected String qBlack;
 }

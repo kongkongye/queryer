@@ -97,7 +97,7 @@ public class QueryUtil {
         }
     }
 
-    public static void parseSel(StringBuilder selSql, @Nullable Class<?> dtoCls) {
+    public static void parseSel(StringBuilder selSql, @Nullable Class<?> dtoCls, @Nullable Set<String> white, @Nullable Set<String> black) {
         //dtoCls为null
         if (dtoCls == null) {
             return;
@@ -111,7 +111,7 @@ public class QueryUtil {
         }
 
         //自动添加
-        selSql.append(getSelSql(dtoCls, null, autoSel.alias()));
+        selSql.append(getSelSql(dtoCls, white, black, autoSel.alias()));
     }
 
     public static void parseFrom(SqlHelper.FromBuilder fromSql, @Nullable Class<?> dtoCls) {
@@ -147,65 +147,69 @@ public class QueryUtil {
     /**
      * ignores为null
      *
-     * @see #getSelSql(Class, Set)
+     * @see #getSelSql(Class, Set, Set)
      */
     public static String getSelSql(Class dtoCls) {
-        return getSelSql(dtoCls, null);
+        return getSelSql(dtoCls, null, null);
     }
 
     /**
      * alias为a
      *
-     * @see #getSelSql(Class, Set, String)
+     * @see #getSelSql(Class, Set, Set, String)
      */
-    public static String getSelSql(Class dtoCls, Set<String> ignores) {
-        return getSelSql(dtoCls, ignores, "a");
+    public static String getSelSql(Class dtoCls, @Nullable Set<String> white, @Nullable Set<String> black) {
+        return getSelSql(dtoCls, white, black, "a");
     }
 
     /**
-     * @param ignores 忽略的字段名(原始的)
-     * @see #getSelSqlArgs(String, Class, Set)
+     * @see #getSelSqlArgs(String, Class, Set, Set)
      */
-    public static String getSelSql(Class dtoCls, Set<String> ignores, String alias) {
-        return "select " + getSelSqlArgs(alias, dtoCls, ignores) + " ";
+    public static String getSelSql(Class dtoCls, @Nullable Set<String> white, @Nullable Set<String> black, String alias) {
+        return "select " + getSelSqlArgs(alias, dtoCls, white, black) + " ";
     }
 
     /**
-     * @param ignores 忽略的字段名(原始的)
-     * @see #convertSelSqlArgs(List, Set, String, Class)
+     * @see #convertSelSqlArgs(List, Set, Set, String, Class)
      */
-    public static String getSelSqlArgs(String alias, Class dtoCls, Set<String> ignores) {
+    public static String getSelSqlArgs(String alias, Class dtoCls, @Nullable Set<String> white, @Nullable Set<String> black) {
         List<String> args = new ArrayList<>();
-        convertSelSqlArgs(args, ignores, alias, dtoCls);
+        convertSelSqlArgs(args, white, black, alias, dtoCls);
         return String.join(",", args);
     }
 
-    public static void convertSelSqlArgs(List<String> args, @Nullable Set<String> ignores, String alias, Class dtoCls) {
+    public static void convertSelSqlArgs(List<String> args, @Nullable Set<String> white, @Nullable Set<String> black, String alias, Class dtoCls) {
         //本身
         for (Field field : dtoCls.getDeclaredFields()) {
             //检测忽略
-            if (ignores == null || !ignores.contains(field.getName())) {
-                boolean parseEnable = true;
+            if (black != null && black.contains(field.getName())) {
+                continue;
+            }
+            if (white != null && !white.contains(field.getName())) {
+                continue;
+            }
 
-                SelParse parse = field.getDeclaredAnnotation(SelParse.class);
-                if (parse != null) {
-                    parseEnable = parse.enable();
-                }
+            //解析
+            boolean parseEnable = true;
 
-                if (parseEnable) {//解析
-                    String fieldAlias = (parse == null || parse.alias().isEmpty()) ? alias : parse.alias();
-                    String fieldName = field.getName();
-                    String sqlFieldName = (parse == null || Strings.isNullOrEmpty(parse.sqlFieldName())) ? CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, fieldName) : parse.sqlFieldName();
-                    String arg = fieldAlias + "." + sqlFieldName + " " + fieldName;
-                    args.add(arg);
-                }
+            SelParse parse = field.getDeclaredAnnotation(SelParse.class);
+            if (parse != null) {
+                parseEnable = parse.enable();
+            }
+
+            if (parseEnable) {//解析
+                String fieldAlias = (parse == null || parse.alias().isEmpty()) ? alias : parse.alias();
+                String fieldName = field.getName();
+                String sqlFieldName = (parse == null || Strings.isNullOrEmpty(parse.sqlFieldName())) ? CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, fieldName) : parse.sqlFieldName();
+                String arg = fieldAlias + "." + sqlFieldName + " " + fieldName;
+                args.add(arg);
             }
         }
 
         //父
         Class superCls = dtoCls.getSuperclass();
         if (superCls != null && superCls != Object.class) {
-            convertSelSqlArgs(args, ignores, alias, superCls);
+            convertSelSqlArgs(args, white, black, alias, superCls);
         }
     }
 
