@@ -209,6 +209,10 @@ public class QueryUtil {
         }
     }
 
+    public static Object query(@Nullable QueryTypeEn queryType, Paging paging, SqlHelperBuilder sqlHelperBuilder) {
+        return query(queryType, paging, sqlHelperBuilder.build());
+    }
+
     public static Object query(@Nullable QueryTypeEn queryType, Paging paging, SqlHelper sqlHelper) {
         if (queryType == null) {
             queryType = QueryTypeEn.page;

@@ -76,8 +76,8 @@ public abstract class SqlHelper<R> extends Base {
 
     protected Query query;
 
-    protected List<Converter> converters = new ArrayList<>();
-    protected List<Peeker<R>> peekers = new ArrayList<>();
+    protected List<Converter> converters;
+    protected List<Peeker<R>> peekers;
 
     /**
      * 结果类
@@ -85,11 +85,12 @@ public abstract class SqlHelper<R> extends Base {
     @Nullable
     protected Class<R> cls;
 
-    public SqlHelper(String selSql, FromBuilder fromSql, @Nullable String whereSql, @Nullable String groupSql, Map<String, Object> params, @Nullable Query query) {
-        this(selSql, fromSql, whereSql, groupSql, params, query, null);
-    }
+//    public SqlHelper(String selSql, FromBuilder fromSql, @Nullable String whereSql, @Nullable String groupSql, Map<String, Object> params, @Nullable Query query) {
+//        this(selSql, fromSql, whereSql, groupSql, params, query, null);
+//    }
 
-    public SqlHelper(String selSql, FromBuilder fromSql, @Nullable String whereSql, @Nullable String groupSql, Map<String, Object> params, @Nullable Query query, Class<R> cls) {
+    public SqlHelper(String selSql, FromBuilder fromSql, @Nullable String whereSql, @Nullable String groupSql, Map<String, Object> params, @Nullable Query query, @Nullable Class<R> cls,
+                     List<Converter> converters, List<Peeker<R>> peekers) {
         this.selSql = selSql;
         this.fromSql = fromSql;
         this.whereSql = whereSql;
@@ -97,26 +98,8 @@ public abstract class SqlHelper<R> extends Base {
         this.params = params;
         this.query = query;
         this.cls = cls;
-    }
-
-    /**
-     * 添加Maps转换器(按顺序)
-     *
-     * @return 本身
-     */
-    public SqlHelper<R> addConverter(Converter converter) {
-        this.converters.add(converter);
-        return this;
-    }
-
-    /**
-     * 添加对象执行器(按顺序)
-     *
-     * @return 本身
-     */
-    public SqlHelper<R> addPeeker(Peeker<R> peeker) {
-        this.peekers.add(peeker);
-        return this;
+        this.converters = converters;
+        this.peekers = peekers;
     }
 
     /**

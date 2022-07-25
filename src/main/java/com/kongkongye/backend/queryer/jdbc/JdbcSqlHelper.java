@@ -19,13 +19,14 @@ public class JdbcSqlHelper<R> extends SqlHelper<R> {
     @Setter
     private NamedParameterJdbcTemplate template;
 
-//    public JdbcSqlHelper(NamedParameterJdbcTemplate template, String selSql, FromBuilder fromSql, String whereSql, String groupSql, Map<String, Object> params, BaseQuery query) {
+//    public JdbcSqlHelper(NamedParameterJdbcTemplate template, String selSql, FromBuilder fromSql, String whereSql, String groupSql, Map<String, Object> params, Query query) {
 //        super(selSql, fromSql, whereSql, groupSql, params, query);
 //        this.template = template;
 //    }
 
-    public JdbcSqlHelper(NamedParameterJdbcTemplate template, String selSql, FromBuilder fromSql, String whereSql, String groupSql, Map<String, Object> params, Query query, Class<R> cls) {
-        super(selSql, fromSql, whereSql, groupSql, params, query, cls);
+    public JdbcSqlHelper(NamedParameterJdbcTemplate template, String selSql, FromBuilder fromSql, String whereSql, String groupSql, Map<String, Object> params, Query query, Class<R> cls,
+                         List<Converter> converters, List<Peeker<R>> peekers) {
+        super(selSql, fromSql, whereSql, groupSql, params, query, cls, converters, peekers);
         this.template = template;
     }
 
