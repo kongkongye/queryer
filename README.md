@@ -110,6 +110,11 @@ Query的基类里有orderBy字段，设置后可以自动解析排序语句。
 
 SqlHelper里获取分页数据会自动进行limit
 
+### 字段白名单与黑名单
+
+客户端通过传入`qWhite`与`qBlack`可选择性改变查询的字段。
+比如只查需要的id,code,name字段；或不查可能很长的note,description字段等。
+
 ## 常见问题
 
 ### 会不会有sql注入的风险？
