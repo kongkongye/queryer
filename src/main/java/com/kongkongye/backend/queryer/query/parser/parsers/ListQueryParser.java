@@ -2,6 +2,7 @@ package com.kongkongye.backend.queryer.query.parser.parsers;
 
 import com.kongkongye.backend.queryer.SqlHelper;
 import com.kongkongye.backend.queryer.common.ReflectionUtil;
+import com.kongkongye.backend.queryer.query.annotation.QueryIn;
 import com.kongkongye.backend.queryer.query.parser.QueryParser;
 
 import java.lang.reflect.Field;
@@ -20,7 +21,8 @@ public class ListQueryParser implements QueryParser {
             if (value.isEmpty()) {
                 whereSql.append(" and false ");
             } else {
-                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" in (:").append(fieldName).append(") ");
+                QueryIn queryIn = field.getDeclaredAnnotation(QueryIn.class);
+                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(queryIn != null && !queryIn.value() ? " not in " : " in ").append(" (:").append(fieldName).append(") ");
                 params.put(fieldName, value);
             }
         }
