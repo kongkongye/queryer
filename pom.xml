@@ -43,4 +43,16 @@
             <version>1.2.83</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>wxgx</id>
+            <distributionManagement>
+                <repository>
+                    <id>wxgx</id>
+                    <url>http://10.15.98.52:8081/repository/maven-releases/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>
