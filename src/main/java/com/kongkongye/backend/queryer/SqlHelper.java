@@ -8,6 +8,7 @@ import com.kongkongye.backend.queryer.common.Base;
 import com.kongkongye.backend.queryer.common.Maps;
 import com.kongkongye.backend.queryer.common.Pagination;
 import com.kongkongye.backend.queryer.common.Paging;
+import com.kongkongye.backend.queryer.en.DialectEn;
 import com.kongkongye.backend.queryer.query.Query;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -259,7 +260,11 @@ public abstract class SqlHelper<R> extends Base {
     }
 
     public String getLimitSql(Paging paging) {
-        return " limit " + (paging.getPage() - 1) * paging.getPageSize() + "," + paging.getPageSize() + " ";
+        if (QueryUtil.dialect == DialectEn.pgsql) {
+            return " limit " + (paging.getPage() - 1) * paging.getPageSize() + " offset " + paging.getPageSize() + " ";
+        } else {
+            return " limit " + (paging.getPage() - 1) * paging.getPageSize() + "," + paging.getPageSize() + " ";
+        }
     }
 
     protected List<Maps> convert(List<Maps> list) {

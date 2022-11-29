@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class QueryUtil {
+    public static DialectEn dialect = DialectEn.mysql;
     private static Table<DialectEn, Class, QueryParser> defaultParsers = HashBasedTable.create();
 
     static {
@@ -79,13 +80,13 @@ public class QueryUtil {
                 String alias = (queryParse == null || queryParse.alias().isEmpty()) ? autoQuery.alias() : queryParse.alias();
                 String fieldName = (queryParse == null || Strings.isNullOrEmpty(queryParse.fieldName())) ? field.getName() : queryParse.fieldName();
                 String sqlFieldName = (queryParse == null || Strings.isNullOrEmpty(queryParse.sqlFieldName())) ? CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, fieldName) : queryParse.sqlFieldName();
-                QueryUtil.parseQueryField(autoQuery.dialect(), selSql, fromSql, whereSql, groupSql, params, query, alias, field, queryParse != null ? queryParse.parser() : null, fieldName, sqlFieldName);
+                QueryUtil.parseQueryField(selSql, fromSql, whereSql, groupSql, params, query, alias, field, queryParse != null ? queryParse.parser() : null, fieldName, sqlFieldName);
             }
         }
     }
 
     @SneakyThrows
-    private static void parseQueryField(DialectEn dialect, StringBuilder selSql, SqlHelper.FromBuilder fromSql, StringBuilder whereSql, StringBuilder groupSql, Map<String, Object> params,
+    private static void parseQueryField(StringBuilder selSql, SqlHelper.FromBuilder fromSql, StringBuilder whereSql, StringBuilder groupSql, Map<String, Object> params,
                                         Object obj, String alias, Field field, Class<? extends QueryParser> parserCls, String fieldName, String sqlFieldName) {
         //QueryNull
         QueryNull queryNull = field.getDeclaredAnnotation(QueryNull.class);

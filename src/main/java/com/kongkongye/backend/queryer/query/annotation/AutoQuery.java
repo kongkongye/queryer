@@ -1,7 +1,5 @@
 package com.kongkongye.backend.queryer.query.annotation;
 
-import com.kongkongye.backend.queryer.en.DialectEn;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,6 +15,4 @@ public @interface AutoQuery {
      * 别名
      */
     String alias() default "a";
-
-    DialectEn dialect() default DialectEn.mysql;
 }
