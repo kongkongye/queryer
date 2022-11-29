@@ -261,7 +261,7 @@ public abstract class SqlHelper<R> extends Base {
 
     public String getLimitSql(Paging paging) {
         if (QueryUtil.dialect == DialectEn.pgsql) {
-            return " limit " + (paging.getPage() - 1) * paging.getPageSize() + " offset " + paging.getPageSize() + " ";
+            return " offset " + (paging.getPage() - 1) * paging.getPageSize() + " limit " + paging.getPageSize() + " ";
         } else {
             return " limit " + (paging.getPage() - 1) * paging.getPageSize() + "," + paging.getPageSize() + " ";
         }
