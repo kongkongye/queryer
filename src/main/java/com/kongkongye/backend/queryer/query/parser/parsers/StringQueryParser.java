@@ -13,6 +13,8 @@ import java.util.Map;
  * 不为null或空判断
  */
 public class StringQueryParser implements QueryParser {
+    public static String DEFAULT_LIKE = "like";
+
     @Override
     public void parse(StringBuilder selSql, SqlHelper.FromBuilder fromSql, StringBuilder whereSql, StringBuilder groupSql, Map<String, Object> params,
                       Object obj, String alias, Field field, String fieldName, String sqlFieldName) {
@@ -22,7 +24,8 @@ public class StringQueryParser implements QueryParser {
             if (queryLike != null) {//like
                 String left = queryLike.left() ? "%" : "";
                 String right = queryLike.right() ? "%" : "";
-                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" " + queryLike.like() + " :").append(fieldName).append(" ");
+                String like = Strings.isNullOrEmpty(queryLike.like()) ? DEFAULT_LIKE : queryLike.like();
+                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" " + like + " :").append(fieldName).append(" ");
                 params.put(fieldName, left + value + right);
             } else {//相等
                 //空内容，不加限制
@@ -37,7 +40,7 @@ public class StringQueryParser implements QueryParser {
                     }
                 }
                 //加sql
-                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" like :").append(fieldName).append(" ");
+                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" " + DEFAULT_LIKE + " :").append(fieldName).append(" ");
 //                    whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" = :").append(fieldName).append(" ");
                 params.put(fieldName, value);
             }

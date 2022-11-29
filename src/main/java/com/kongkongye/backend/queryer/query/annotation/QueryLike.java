@@ -21,5 +21,8 @@ public @interface QueryLike {
      */
     boolean right() default true;
 
-    String like() default "like";
+    /**
+     * 默认空表示使用DEFAULT_LIKE
+     */
+    String like() default "";
 }
