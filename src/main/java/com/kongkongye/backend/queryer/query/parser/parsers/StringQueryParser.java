@@ -22,7 +22,7 @@ public class StringQueryParser implements QueryParser {
             if (queryLike != null) {//like
                 String left = queryLike.left() ? "%" : "";
                 String right = queryLike.right() ? "%" : "";
-                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" like :").append(fieldName).append(" ");
+                whereSql.append(" and ").append(alias).append(".").append(sqlFieldName).append(" " + queryLike.like() + " :").append(fieldName).append(" ");
                 params.put(fieldName, left + value + right);
             } else {//相等
                 //空内容，不加限制

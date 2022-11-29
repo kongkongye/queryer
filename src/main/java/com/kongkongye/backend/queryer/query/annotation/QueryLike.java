@@ -20,4 +20,6 @@ public @interface QueryLike {
      * 是否右边模糊搜索
      */
     boolean right() default true;
+
+    String like() default "like";
 }
